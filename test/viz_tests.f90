@@ -17,7 +17,7 @@ program viz_tests
     integer :: i = 0
 
     sobol = multi_dim_sobol_state(2)
-    call sobol%md_populate(points)
+    call sobol%populate(points)
 
     call gp%xlabel("Dimension 1") 
     call gp%ylabel("Dimension 2")
