@@ -6,22 +6,61 @@ program viz_tests
 
     implicit none
 
-    integer, parameter :: n_points = 2**12
+    integer, parameter :: n_points = 2**12 ! power must be a multiple of 2
+    integer, parameter :: n_points_sqrt = int(sqrt(real(n_points)))
 
     type(multi_dim_sobol_state) :: sobol
     type(gpf) :: gp
 
+    real(kind=wp), allocatable, dimension(:,:) :: temp_x, temp_y, temp_fx
+
     real(kind=wp), dimension(n_points,2) :: points, x
     real(kind=wp), dimension(n_points,1) :: fx 
 
-    integer :: i = 0
-
-    sobol = multi_dim_sobol_state(2)
-    call sobol%populate(points)
+    integer :: i = 0, pgen
 
     call gp%xlabel("Dimension 1") 
     call gp%ylabel("Dimension 2")
-    call gp%options("set style data points")
+
+    pointsloop: do
+        print *
+        print *, "1 Sobol:"
+        print *, "2 Linear:"
+        print *
+        print *, "Select Point Generator or 0 to Exit"
+        read (*,*) i
+
+        pgen = i
+        select case (pgen)
+        case (1)
+            sobol = multi_dim_sobol_state(2)
+            call sobol%populate(points)
+            call gp%options("set style data points")
+        case (2)
+
+            allocate(temp_x(n_points_sqrt, n_points_sqrt))
+            allocate(temp_y(n_points_sqrt, n_points_sqrt))
+            allocate(temp_fx(n_points_sqrt, n_points_sqrt))
+
+            call meshgrid(temp_x, temp_y, &
+                         [(real(i, kind=wp), i=1, n_points_sqrt)])
+
+            points(:,1) = reshape(temp_x, [n_points])
+            points(:,2) = reshape(temp_y, [n_points])
+            points = points/n_points_sqrt
+
+            call gp%options("set style data lines")
+            call gp%options("set hidden3d")
+        case (0)
+            print *, "Selected 0, Terminating Program"
+            stop
+        case default
+            print *, "Invalid selection, try again"
+            cycle pointsloop
+        end select
+
+        exit 
+    end do pointsloop
 
     mainloop: do
 
@@ -66,11 +105,15 @@ program viz_tests
 
         print *, "Plotting Visualization ..."
 
-        call gp%surf(x(:,1:1), x(:,2:2), fx, "with points ps 1.2")
-
-        print *
-        print *, "Press any button to continue..."
-        read *
+        select case (pgen)
+        case (1)
+            call gp%surf(x(:,1:1), x(:,2:2), fx)
+        case (2)
+            temp_x = reshape(x(:,1), [n_points_sqrt, n_points_sqrt])
+            temp_y = reshape(x(:,2), [n_points_sqrt, n_points_sqrt])
+            temp_fx = reshape(fx, [n_points_sqrt, n_points_sqrt])
+            call gp%surf(temp_x, temp_y, temp_fx, palette="jet")
+        end select
     end do mainloop
 
     call execute_command_line("rm ogpf_temp_script.gp")
