@@ -1,0 +1,18 @@
+name = "OTF"
+version = "0.1.0"
+license = "MIT"
+author = "Renato Zimmermann"
+maintainer = "renato.zimmermann@mail.utoronto.ca"
+copyright = "Copyright 2021, Renato Zimmermann"
+
+[library]
+source-dir="src"
+
+[[test]]
+name="viz_tests"
+source-dir="test"
+main="viz_tests.f90"
+
+[test.dependencies]
+ogpf = { git = "https://github.com/kookma/ogpf.git" }
+sobseq = { git = "https://github.com/renatomatz/sobseq.git" }
