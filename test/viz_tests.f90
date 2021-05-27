@@ -31,6 +31,10 @@ program viz_tests
         print *
         print *, "Optimization Function Visualization"
         print *, "1: Auckley Function (a=20, b=0.2, 2pi)"
+        print *, "2: Rosenbrock Function"
+        print *, "3: Eggholder Function"
+        print *, "4: Cross-in-Tray Function"
+        print *, "5: Griewank Function"
         print *
         print *, "Select function to visualize or 0 to exit"
 
@@ -46,6 +50,12 @@ program viz_tests
         case (3)
             x = points*2*512 - 512
             fx(:,1) = eggholder(x)
+        case (4)
+            x = points*2*10 - 10
+            fx(:,1) = cross_in_tray(x)
+        case (5)
+            x = points*2*6 - 6
+            fx(:,1) = griewank(x)
         case (0)
             exit mainloop
         case default
@@ -56,7 +66,7 @@ program viz_tests
 
         print *, "Plotting Visualization ..."
 
-        call gp%surf(points(:,1:1), points(:,2:2), fx, "with points", palette="jet")
+        call gp%surf(x(:,1:1), x(:,2:2), fx, "with points", palette="jet")
 
         print *
         print *, "Press any button to continue..."
