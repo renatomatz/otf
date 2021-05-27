@@ -6,7 +6,7 @@ program viz_tests
 
     implicit none
 
-    integer, parameter :: n_points = 1024
+    integer, parameter :: n_points = 2**12
 
     type(multi_dim_sobol_state) :: sobol
     type(gpf) :: gp
@@ -21,7 +21,7 @@ program viz_tests
 
     call gp%xlabel("Dimension 1") 
     call gp%ylabel("Dimension 2")
-    call gp%options("set style data lines")
+    call gp%options("set style data points")
 
     mainloop: do
 
@@ -66,11 +66,13 @@ program viz_tests
 
         print *, "Plotting Visualization ..."
 
-        call gp%surf(x(:,1:1), x(:,2:2), fx, "with points", palette="jet")
+        call gp%surf(x(:,1:1), x(:,2:2), fx, "with points ps 1.2")
 
         print *
         print *, "Press any button to continue..."
         read *
     end do mainloop
+
+    call execute_command_line("rm ogpf_temp_script.gp")
 
 end program viz_tests
