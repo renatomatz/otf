@@ -106,7 +106,7 @@ contains
         real(kind=wp), intent(in) :: a, b, c
         real(kind=wp) :: fx
 
-        real(kind=wp), dimension(size(x, 1)) :: fx_res
+        real(kind=wp), dimension(1:1) :: fx_res
 
         fx_res = auckley_2d(reshape(x, [1, size(x)]), a, b, c)
         fx = fx_res(1)
@@ -116,7 +116,7 @@ contains
         real(kind=wp), dimension(:), intent(in) :: x
         real(kind=wp) :: fx
 
-        real(kind=wp), dimension(size(x, 1)) :: fx_res
+        real(kind=wp), dimension(1:1) :: fx_res
 
         fx_res = rosenbrock_2d(reshape(x, [1, size(x)]))
         fx = fx_res(1)
@@ -126,7 +126,7 @@ contains
         real(kind=wp), dimension(:), intent(in) :: x
         real(kind=wp) :: fx
 
-        real(kind=wp), dimension(size(x, 1)) :: fx_res
+        real(kind=wp), dimension(1:1) :: fx_res
 
         fx_res = eggholder_2d(reshape(x, [1, size(x)]))
         fx = fx_res(1)
@@ -136,7 +136,7 @@ contains
         real(kind=wp), dimension(:), intent(in) :: x
         real(kind=wp) :: fx
 
-        real(kind=wp), dimension(size(x, 1)) :: fx_res
+        real(kind=wp), dimension(1:1) :: fx_res
 
         fx_res = cross_in_tray_2d(reshape(x, [1, size(x)]))
         fx = fx_res(1)
@@ -146,7 +146,7 @@ contains
         real(kind=wp), dimension(:), intent(in) :: x
         real(kind=wp) :: fx
 
-        real(kind=wp), dimension(size(x, 1)) :: fx_res
+        real(kind=wp), dimension(1:1) :: fx_res
 
         fx_res = griewank_2d(reshape(x, [1, size(x)]))
         fx = fx_res(1)
