@@ -113,7 +113,7 @@ contains
     end function auckley_1d
 
     pure function rosenbrock_1d(x) result(fx)
-        real(kind=wp), dimension(:,:), intent(in) :: x
+        real(kind=wp), dimension(:), intent(in) :: x
         real(kind=wp) :: fx
 
         real(kind=wp), dimension(size(x, 1)) :: fx_res
@@ -123,7 +123,7 @@ contains
     end function rosenbrock_1d
 
     pure function eggholder_1d(x) result(fx)
-        real(kind=wp), dimension(:,:), intent(in) :: x
+        real(kind=wp), dimension(:), intent(in) :: x
         real(kind=wp) :: fx
 
         real(kind=wp), dimension(size(x, 1)) :: fx_res
@@ -133,7 +133,7 @@ contains
     end function eggholder_1d
 
     pure function cross_in_tray_1d(x) result(fx)
-        real(kind=wp), dimension(:,:), intent(in) :: x
+        real(kind=wp), dimension(:), intent(in) :: x
         real(kind=wp) :: fx
 
         real(kind=wp), dimension(size(x, 1)) :: fx_res
@@ -143,7 +143,7 @@ contains
     end function cross_in_tray_1d
 
     pure function griewank_1d(x) result(fx)
-        real(kind=wp), dimension(:,:), intent(in) :: x
+        real(kind=wp), dimension(:), intent(in) :: x
         real(kind=wp) :: fx
 
         real(kind=wp), dimension(size(x, 1)) :: fx_res
