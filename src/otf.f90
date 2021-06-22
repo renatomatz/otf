@@ -8,7 +8,7 @@ module otf
 
 contains
 
-    pure function auckley_2d(x, a, b, c) result(fx)
+    pure function ackley_2d(x, a, b, c) result(fx)
         real(kind=wp), dimension(:,:), intent(in) :: x
         real(kind=wp), intent(in) :: a, b, c
         real(kind=wp), dimension(size(x, 1)) :: fx
@@ -19,7 +19,7 @@ contains
         fx = -a*exp(-b*sqrt((1.d0/d)*sum(x**2, 2)))&
              - exp((1.d0/d)*sum(cos(c*x), 2))&
              + a + exp(1.d0)
-    end function auckley_2d
+    end function ackley_2d
 
     pure function rosenbrock_2d(x) result(fx)
         real(kind=wp), dimension(:,:), intent(in) :: x
@@ -36,7 +36,7 @@ contains
         x1 = x(:,:d-1)
         x2 = x(:,2:)
 
-        fx = sum(100*(x2-x1**2)**2+(x1-1)**2, 2)
+        fx = sum(100*(x2-x1**2)**2+(x1-1)**2, 2) + 1
     end function rosenbrock_2d
 
     pure function eggholder_2d(x) result(fx)
@@ -80,8 +80,9 @@ contains
         )+1)**0.1
     end function cross_in_tray_2d
 
-    pure function griewank_2d(x) result(fx)
+    pure function griewank_2d(x, a) result(fx)
         real(kind=wp), dimension(:,:), intent(in) :: x
+        real(kind=wp), intent(in) :: a
         real(kind=wp), dimension(size(x, 1)) :: fx
 
         real(kind=wp), dimension(size(x, 1), size(x, 2)) :: seq
@@ -95,22 +96,49 @@ contains
             seq(:,i) = seq(:,i)*i
         end do
 
-        fx = sum(x**2/4000, 2) &
+        fx = sum(x**2/a, 2) &
              - product(cos( &
                 x/sqrt(seq) &
-             ), 2) + 1
+             ), 2) + 2
     end function griewank_2d
 
-    pure function auckley_1d(x, a, b, c) result(fx)
+    pure function levy_n13_2d(x) result(fx)
+        real(kind=wp), dimension(:,:), intent(in) :: x
+        real(kind=wp), dimension(size(x, 1)) :: fx
+
+        integer :: n
+
+        n = size(x, 2)
+
+        fx = sin(3*pi*x(:,1))**2 &
+             + ((x(:,n)-1)**2)*(1+sin(2*pi*x(:,n))**2) &
+             + sum(((x(:,:n-1)-1)**2)*(1+sin(3*pi*x(:,2:))**2) + 1, 2)
+    end function levy_n13_2d
+
+    pure function rastrigin_2d(x, a) result(fx)
+        real(kind=wp), dimension(:,:), intent(in) :: x
+        real(kind=wp), intent(in) :: a
+        real(kind=wp), dimension(size(x, 1)) :: fx
+
+        integer :: n
+
+        n = size(x, 2)
+
+        fx = a*n + sum(x**2 - a*cos(2*pi*x), 2) + 1
+    end function rastrigin_2d
+
+! =============================================================================
+
+    pure function ackley_1d(x, a, b, c) result(fx)
         real(kind=wp), dimension(:), intent(in) :: x
         real(kind=wp), intent(in) :: a, b, c
         real(kind=wp) :: fx
 
         real(kind=wp), dimension(1:1) :: fx_res
 
-        fx_res = auckley_2d(reshape(x, [1, size(x)]), a, b, c)
+        fx_res = ackley_2d(reshape(x, [1, size(x)]), a, b, c)
         fx = fx_res(1)
-    end function auckley_1d
+    end function ackley_1d
 
     pure function rosenbrock_1d(x) result(fx)
         real(kind=wp), dimension(:), intent(in) :: x
@@ -142,13 +170,14 @@ contains
         fx = fx_res(1)
     end function cross_in_tray_1d
 
-    pure function griewank_1d(x) result(fx)
+    pure function griewank_1d(x, a) result(fx)
         real(kind=wp), dimension(:), intent(in) :: x
+        real(kind=wp), intent(in) :: a
         real(kind=wp) :: fx
 
         real(kind=wp), dimension(1:1) :: fx_res
 
-        fx_res = griewank_2d(reshape(x, [1, size(x)]))
+        fx_res = griewank_2d(reshape(x, [1, size(x)]), a)
         fx = fx_res(1)
     end function griewank_1d
 

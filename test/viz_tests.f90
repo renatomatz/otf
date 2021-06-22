@@ -6,7 +6,7 @@ program viz_tests
 
     implicit none
 
-    integer, parameter :: n_points = 2**12 ! power must be a multiple of 2
+    integer, parameter :: n_points = 2**14 ! power must be a multiple of 2
     integer, parameter :: n_points_sqrt = int(sqrt(real(n_points)))
 
     type(multi_dim_sobol_state) :: sobol
@@ -14,10 +14,11 @@ program viz_tests
 
     real(kind=wp), allocatable, dimension(:,:) :: temp_x, temp_y, temp_fx
 
-    real(kind=wp), dimension(n_points,2) :: points, x
-    real(kind=wp), dimension(n_points,1) :: fx 
+    real(kind=wp), allocatable, dimension(:,:) :: fx, points, x
 
     integer :: i = 0, pgen
+
+    allocate(points(n_points,2), x(n_points,2), fx(n_points,1))
 
     call gp%xlabel("Dimension 1") 
     call gp%ylabel("Dimension 2")
@@ -73,7 +74,9 @@ program viz_tests
         print *, "2: Rosenbrock Function"
         print *, "3: Eggholder Function"
         print *, "4: Cross-in-Tray Function"
-        print *, "5: Griewank Function"
+        print *, "5: Griewank Function (a = 200)"
+        print *, "6: Levy No. 13 Function"
+        print *, "7: Rastrigin Function (a = 10)"
         print *
         print *, "Select function to visualize or 0 to exit"
 
@@ -82,19 +85,25 @@ program viz_tests
         select case(i)
         case (1)
             x = points*2*32.768 - 32.768
-            fx(:,1) = auckley(x, 20.d0, 0.2d0, 2*pi)
+            fx(:,1) = ackley_2d(x, 20.d0, 0.2d0, 2*pi)
         case (2)
             x = points*2*2.048 - 2.048
-            fx(:,1) = rosenbrock(x)
+            fx(:,1) = rosenbrock_2d(x)
         case (3)
             x = points*2*512 - 512
-            fx(:,1) = eggholder(x)
+            fx(:,1) = eggholder_2d(x)
         case (4)
             x = points*2*10 - 10
-            fx(:,1) = cross_in_tray(x)
+            fx(:,1) = cross_in_tray_2d(x)
         case (5)
             x = points*2*6 - 6
-            fx(:,1) = griewank(x)
+            fx(:,1) = griewank_2d(x, 200.0_wp)
+        case (6)
+            x = points*2*10 - 10
+            fx(:,1) = levy_n13_2d(x)
+        case (7)
+            x = points*2*5.12 - 5.12
+            fx(:,1) = rastrigin_2d(x, 10.0_wp)
         case (0)
             exit mainloop
         case default
