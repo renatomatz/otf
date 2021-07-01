@@ -181,4 +181,25 @@ contains
         fx = fx_res(1)
     end function griewank_1d
 
+    pure function levy_n13_1d(x) result(fx)
+        real(kind=wp), dimension(:), intent(in) :: x
+        real(kind=wp) :: fx
+
+        real(kind=wp), dimension(1:1) :: fx_res
+
+        fx_res = levy_n13_2d(reshape(x, [1, size(x)]))
+        fx = fx_res(1)
+    end function levy_n13_1d
+
+    pure function rastrigin_1d(x, a) result(fx)
+        real(kind=wp), dimension(:), intent(in) :: x
+        real(kind=wp), intent(in) :: a
+        real(kind=wp) :: fx
+
+        real(kind=wp), dimension(1:1) :: fx_res
+
+        fx_res = rastrigin_2d(reshape(x, [1, size(x)]), a)
+        fx = fx_res(1)
+    end function rastrigin_1d
+
 end module otf
