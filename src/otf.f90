@@ -36,7 +36,7 @@ contains
         x1 = x(:,:d-1)
         x2 = x(:,2:)
 
-        fx = sum(100*(x2-x1**2)**2+(x1-1)**2 + 1, 2)
+        fx = sum(100*(x2-x1**2)**2+(x1-1)**2, 2) + 1
     end function rosenbrock_2d
 
     pure function eggholder_2d(x) result(fx)
@@ -112,7 +112,8 @@ contains
 
         fx = sin(3*pi*x(:,1))**2 &
              + ((x(:,n)-1)**2)*(1+sin(2*pi*x(:,n))**2) &
-             + sum(((x(:,:n-1)-1)**2)*(1+sin(3*pi*x(:,2:))**2) + 1, 2)
+             + sum(((x(:,:n-1)-1)**2)*(1+sin(3*pi*x(:,2:))**2), 2) &
+             + 1
     end function levy_n13_2d
 
     pure function rastrigin_2d(x, a) result(fx)
@@ -124,7 +125,7 @@ contains
 
         n = size(x, 2)
 
-        fx = a*n + sum(x**2 - a*cos(2*pi*x) + 1, 2)
+        fx = a*n + sum(x**2 - a*cos(2*pi*x), 2) + 1
     end function rastrigin_2d
 
 ! =============================================================================
