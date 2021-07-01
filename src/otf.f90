@@ -36,7 +36,7 @@ contains
         x1 = x(:,:d-1)
         x2 = x(:,2:)
 
-        fx = sum(100*(x2-x1**2)**2+(x1-1)**2, 2) + 1
+        fx = sum(100*(x2-x1**2)**2+(1-x1)**2, 2) + 1
     end function rosenbrock_2d
 
     pure function eggholder_2d(x) result(fx)
