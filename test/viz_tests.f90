@@ -20,7 +20,7 @@ program viz_tests
 
     allocate(points(n_points,2), x(n_points,2), fx(n_points,1))
 
-    call gp%xlabel("Dimension 1") 
+    call gp%xlabel("Dimension 1")
     call gp%ylabel("Dimension 2")
 
     pointsloop: do
@@ -60,7 +60,7 @@ program viz_tests
             cycle pointsloop
         end select
 
-        exit 
+        exit
     end do pointsloop
 
     mainloop: do
@@ -85,25 +85,25 @@ program viz_tests
         select case(i)
         case (1)
             x = points*2*32.768 - 32.768
-            fx(:,1) = ackley_2d(x, 20.d0, 0.2d0, 2*pi)
+            fx(:,1) = ackley_mult(x, 20.d0, 0.2d0, 2*pi)
         case (2)
             x = points*2*2.048 - 2.048
-            fx(:,1) = rosenbrock_2d(x)
+            fx(:,1) = rosenbrock_mult(x)
         case (3)
             x = points*2*512 - 512
-            fx(:,1) = eggholder_2d(x)
+            fx(:,1) = eggholder_mult(x)
         case (4)
             x = points*2*10 - 10
-            fx(:,1) = cross_in_tray_2d(x)
+            fx(:,1) = cross_in_tray_mult(x)
         case (5)
             x = points*2*6 - 6
-            fx(:,1) = griewank_2d(x, 200.0_wp)
+            fx(:,1) = griewank_mult(x, 200.0_wp)
         case (6)
             x = points*2*10 - 10
-            fx(:,1) = levy_n13_2d(x)
+            fx(:,1) = levy_n13_mult(x)
         case (7)
             x = points*2*5.12 - 5.12
-            fx(:,1) = rastrigin_2d(x, 10.0_wp)
+            fx(:,1) = rastrigin_mult(x, 10.0_wp)
         case (0)
             exit mainloop
         case default
