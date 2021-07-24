@@ -1,7 +1,7 @@
 program viz_tests
 
     use sobseq
-    use ogpf
+    use ogpf, only: gpf, meshgrid
     use otf
 
     implicit none
@@ -13,7 +13,6 @@ program viz_tests
     type(gpf) :: gp
 
     real(kind=wp), allocatable, dimension(:,:) :: temp_x, temp_y, temp_fx
-
     real(kind=wp), allocatable, dimension(:,:) :: fx, points, x
 
     integer :: i = 0, pgen
@@ -75,8 +74,14 @@ program viz_tests
         print *, "3: Eggholder Function"
         print *, "4: Cross-in-Tray Function"
         print *, "5: Griewank Function (a = 200)"
-        print *, "6: Levy No. 13 Function"
-        print *, "7: Rastrigin Function (a = 10)"
+        print *, "6: Levy Function"
+        print *, "7: Levy No. 13 Function"
+        print *, "8: Rastrigin Function (a = 10)"
+        print *, "9: Schwefel Function"
+        print *, "10: Perm Function 0, D, Beta (beta=2)"
+        print *, "11: Perm Function D, Beta (beta=2)"
+        print *, "12: Trid Function"
+        print *, "13: Zakharov Function"
         print *
         print *, "Select function to visualize or 0 to exit"
 
@@ -100,10 +105,28 @@ program viz_tests
             fx(:,1) = griewank_mult(x, 200.0_wp)
         case (6)
             x = points*2*10 - 10
-            fx(:,1) = levy_n13_mult(x)
+            fx(:,1) = levy_mult(x)
         case (7)
+            x = points*2*10 - 10
+            fx(:,1) = levy_n13_mult(x)
+        case (8)
             x = points*2*5.12 - 5.12
             fx(:,1) = rastrigin_mult(x, 10.0_wp)
+        case (9)
+            x = points*2*500 - 500
+            fx(:,1) = schwefel_mult(x)
+        case (10)
+            x = points*2*2 - 2
+            fx(:,1) = perm0_mult(x, 2.0_wp)
+        case (11)
+            x = points*2*2 - 2
+            fx(:,1) = perm_mult(x, 2.0_wp)
+        case (12)
+            x = points*2*4 - 4
+            fx(:,1) = trid_mult(x)
+        case (13)
+            x = points*2*10 - 10
+            fx(:,1) = zakharov_mult(x)
         case (0)
             exit mainloop
         case default
