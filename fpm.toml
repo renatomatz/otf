@@ -9,7 +9,15 @@ copyright = "Copyright 2021, Renato Zimmermann"
 source-dir="src"
 
 [[test]]
-name="viz_tests"
+name="min-point-tests"
+source-dir="test"
+main="min_point_tests.f90"
+
+[test.dependencies]
+cafut = { git = "https://github.com/renatomatz/cafut.git" }
+
+[[test]]
+name="viz-tests"
 source-dir="test"
 main="viz_tests.f90"
 

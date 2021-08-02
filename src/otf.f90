@@ -261,7 +261,11 @@ contains
         real(kind=wp), dimension(:,:), intent(in) :: x
         real(kind=wp), dimension(size(x, 1)) :: fx
 
-        fx = 418.9829_wp - sum(x*sin(sqrt(abs(x))), 2)
+        integer :: d
+
+        d = size(x, 2)
+
+        fx = (418.9829_wp*real(d, kind=wp)) - sum(x*sin(sqrt(abs(x))), 2)
     end function schwefel_mult
 
     pure function schwefel_single(x) result(fx)
@@ -321,21 +325,21 @@ contains
         real(kind=wp), dimension(size(x, 1)) :: fx
 
         real(kind=wp), dimension(size(x, 1), size(x, 2), size(x, 2)) :: &
-            seq, inv, poly_x
+            outer, inner, x3d
 
         integer :: n, d, i, j, k
 
         n = size(x, 1)
         d = size(x, 2)
 
-        inv = reshape([(((one/(k**j), i=1, n), j=1, d), k=1, d)], [n, d, d])
-        seq = reshape([(((k**j, i=1, n), j=1, d), k=1, d)], [n, d, d])
+        outer = reshape([(((j, i=1, n), j=1, d), k=1, d)], [n, d, d])
+        inner = reshape([(((k, i=1, n), j=1, d), k=1, d)], [n, d, d])
         do concurrent (j=1:d)
             ! this j is the same as in the definition of inv
-            poly_x(:,j,:) = x**j
+            x3d(:,j,:) = x
         end do
 
-        fx = sum(sum((seq+beta)*((poly_x*inv)-1), 3)**2, 2)
+        fx = sum(sum((inner**outer+beta)*(((x3d/inner)**outer)-1), 3)**2, 2)
     end function perm_mult
 
     pure function perm_single(x, beta) result(fx)
