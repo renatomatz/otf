@@ -288,20 +288,21 @@ contains
         real(kind=wp), dimension(size(x, 1)) :: fx
 
         real(kind=wp), dimension(size(x, 1), size(x, 2), size(x, 2)) :: &
-            seq, inv, poly_x
+            outer, inner, x3d
 
         integer :: n, d, i, j, k
 
         n = size(x, 1)
         d = size(x, 2)
 
-        seq = reshape([(((k, i=1, n), j=1, d), k=1, d)], [n, d, d])
-        inv = reshape([(((one/(k**j), i=1, n), j=1, d), k=1, d)], [n, d, d])
+        outer = reshape([(((j, i=1, n), j=1, d), k=1, d)], [n, d, d])
+        inner = reshape([(((k, i=1, n), j=1, d), k=1, d)], [n, d, d])
         do concurrent (j=1:d)
-            poly_x(:,j,:) = x**j
+            ! this j is the same as in the definition of inv
+            x3d(:,j,:) = x
         end do
 
-        fx = sum(sum((seq+beta)*(poly_x-inv), 3), 2)
+        fx = sum(sum((inner+beta)*((x3d**outer)-((1/inner)**outer)), 3)**2, 2)
 
     end function perm0_mult
 
