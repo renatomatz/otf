@@ -411,4 +411,173 @@ contains
 
 ! =============================================================================
 
+    pure function powell_mult(x) result(fx)
+        !!
+        real(kind=wp), dimension(:,:), intent(in) :: x
+        real(kind=wp), dimension(size(x, 1)) :: fx
+
+        integer :: d
+
+        d = size(x, 2)
+        if (mod(d, 4) /= 0) &
+            error stop "powell: dimensions must be a multiple of 4"
+
+        fx = sum( &
+            (x(:,1::4) + 10*x(:,2::4))**2 + &
+            5*(x(:,3::4) + x(:,4::4))**2 + &
+            (x(:,2::4) + x(:,3::4))**4 + &
+            10*(x(:,1::4) + x(:,4::4))**4, &
+        2)
+
+    end function powell_mult
+
+    pure function powell_single(x) result(fx)
+        real(kind=wp), dimension(:), intent(in) :: x
+        real(kind=wp) :: fx
+
+        real(kind=wp), dimension(1:1) :: fx_res
+
+        fx_res = powell_mult(reshape(x, [1, size(x)]))
+        fx = fx_res(1)
+    end function powell_single
+
+! =============================================================================
+
+    function quartic_mult(x) result(fx)
+        !!
+        real(kind=wp), dimension(:,:), intent(in) :: x
+        real(kind=wp), dimension(size(x, 1)) :: fx
+
+        real(kind=wp), dimension(size(x, 1), size(x,2)) :: rnd
+        integer :: i
+
+        call random_number(rnd)
+
+        fx = 0
+        do i=1,size(x, 2)
+            fx = fx + i*(x(:,i)**4) + rnd(:,i)
+        end do
+
+    end function quartic_mult
+
+    function quartic_single(x) result(fx)
+        real(kind=wp), dimension(:), intent(in) :: x
+        real(kind=wp) :: fx
+
+        real(kind=wp), dimension(1:1) :: fx_res
+
+        fx_res = quartic_mult(reshape(x, [1, size(x)]))
+        fx = fx_res(1)
+    end function quartic_single
+
+! =============================================================================
+
+    pure function step_mult(x) result(fx)
+        !!
+        real(kind=wp), dimension(:,:), intent(in) :: x
+        real(kind=wp), dimension(size(x, 1)) :: fx
+
+        fx = sum((floor(x) + 0.5)**2, 2)
+
+    end function step_mult
+
+    pure function step_single(x) result(fx)
+        real(kind=wp), dimension(:), intent(in) :: x
+        real(kind=wp) :: fx
+
+        real(kind=wp), dimension(1:1) :: fx_res
+
+        fx_res = step_mult(reshape(x, [1, size(x)]))
+        fx = fx_res(1)
+    end function step_single
+
+! =============================================================================
+
+    pure function bukin_6_mult(x) result(fx)
+        !!
+        real(kind=wp), dimension(:,:), intent(in) :: x
+        real(kind=wp), dimension(size(x, 1)) :: fx
+
+        if (size(x, 2) /= 2) &
+            error stop "bukin_6: input must be two-dimensional"
+
+        fx = 100*sqrt(abs(x(:,2) - 0.01*x(:,1)**2)) + 0.01*abs(x(:,1) + 10)
+
+    end function bukin_6_mult
+
+    pure function bukin_6_single(x) result(fx)
+        real(kind=wp), dimension(:), intent(in) :: x
+        real(kind=wp) :: fx
+
+        real(kind=wp), dimension(1:1) :: fx_res
+
+        fx_res = bukin_6_mult(reshape(x, [1, size(x)]))
+        fx = fx_res(1)
+    end function bukin_6_single
+
+! =============================================================================
+
+    pure function corana_mult(x) result(fx)
+        !!
+
+        real(kind=wp), dimension(:,:), intent(in) :: x
+        real(kind=wp), dimension(size(x, 1)) :: fx
+
+        real(kind=wp), parameter, dimension(4) &
+            :: d = [1.0_wp, 1000.0_wp, 10.0_wp, 100.0_wp]
+        real(kind=wp), dimension(size(x, 1), size(x, 2)) :: v, z
+
+        integer :: i
+
+        if (size(x, 2) /= 4) &
+            error stop "corana: input must be four-dimensional"
+
+        z = 0.2*floor(abs(x/0.2) + 0.49999)*sign(one, x)
+        v = abs(x - z)
+
+        fx = 0
+        do i=1,4
+            where (v(:,i) < 0.5)
+                fx = fx + d(i)*(0.15*(z(:,i) - 0.05*sign(one, z(:,i))**2))
+            elsewhere
+                fx = fx + d(i)*(x(:,i)**2)
+            end where
+        end do
+
+    end function corana_mult
+
+    pure function corana_single(x) result(fx)
+        real(kind=wp), dimension(:), intent(in) :: x
+        real(kind=wp) :: fx
+
+        real(kind=wp), dimension(1:1) :: fx_res
+
+        fx_res = corana_mult(reshape(x, [1, size(x)]))
+        fx = fx_res(1)
+    end function corana_single
+
+! =============================================================================
+
+    pure function yang_6_mult(x) result(fx)
+        !!
+        real(kind=wp), dimension(:,:), intent(in) :: x
+        real(kind=wp), dimension(size(x, 1)) :: fx
+
+        fx = (sum(sin(x)**2, 2) - exp(-sum(x**2, 2))) * &
+             exp(sum(sin(sqrt(abs(x)))**2, 2))
+
+    end function yang_6_mult
+
+    pure function yang_6_single(x) result(fx)
+        real(kind=wp), dimension(:), intent(in) :: x
+        real(kind=wp) :: fx
+
+        real(kind=wp), dimension(1:1) :: fx_res
+
+        fx_res = yang_6_mult(reshape(x, [1, size(x)]))
+        fx = fx_res(1)
+    end function yang_6_single
+
+! =============================================================================
+
 end module otf

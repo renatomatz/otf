@@ -13,7 +13,7 @@ program viz_tests
     type(gpf) :: gp
 
     real(kind=wp), allocatable, dimension(:,:) :: temp_x, temp_y, temp_fx
-    real(kind=wp), allocatable, dimension(:,:) :: fx, points, x
+    real(kind=wp), allocatable, dimension(:,:) :: fx, points, x, x_slice
 
     integer :: i = 0, pgen
 
@@ -82,6 +82,12 @@ program viz_tests
         print *, "11: Perm Function D, Beta (beta=2)"
         print *, "12: Trid Function"
         print *, "13: Zakharov Function"
+        print *, "14: Powell Function (Slice)"
+        print *, "15: Quartic Function"
+        print *, "16: Step Function"
+        print *, "17: Bukin 6 Function"
+        print *, "18: Corana Function (Slice)"
+        print *, "19: Yang 6 Function"
         print *
         print *, "Select function to visualize or 0 to exit"
 
@@ -127,6 +133,32 @@ program viz_tests
         case (13)
             x = points*2*10 - 10
             fx(:,1) = zakharov_mult(x)
+        case (14)
+            x = points*9 - 4
+            allocate(x_slice(size(x, 1), 4))
+            x_slice(:,:2) = x
+            x_slice(:,3:) = 0
+            fx(:,1) = powell_mult(x_slice)
+            deallocate(x_slice)
+        case (15)
+            x = points*2*1.28 - 1.28
+            fx(:,1) = quartic_mult(x)
+        case (16)
+            x = points*2*100 - 100
+            fx(:,1) = step_mult(x)
+        case (17)
+            x(:,1)= points(:,1)*10 - 15
+            x(:,2)= points(:,2)*2*3 - 3
+            fx(:,1) = bukin_6_mult(x)
+        case (18)
+            x = points*2*500 - 500
+            allocate(x_slice(size(x, 1), 4))
+            x_slice(:,:2) = 0
+            fx(:,1) = corana_mult(x_slice)
+            deallocate(x_slice)
+        case (19)
+            x = points*2*10 - 10
+            fx(:,1) = yang_6_mult(x)
         case (0)
             exit mainloop
         case default
