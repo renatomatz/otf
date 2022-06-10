@@ -424,9 +424,9 @@ contains
 
         fx = sum( &
             (x(:,1::4) + 10*x(:,2::4))**2 + &
-            5*(x(:,3::4) + x(:,4::4))**2 + &
-            (x(:,2::4) + x(:,3::4))**4 + &
-            10*(x(:,1::4) + x(:,4::4))**4, &
+            5*(x(:,3::4) - x(:,4::4))**2 + &
+            (x(:,2::4) - x(:,3::4))**4 + &
+            10*(x(:,1::4) - x(:,4::4))**4, &
         2)
 
     end function powell_mult
@@ -477,7 +477,7 @@ contains
         real(kind=wp), dimension(:,:), intent(in) :: x
         real(kind=wp), dimension(size(x, 1)) :: fx
 
-        fx = sum((floor(x) + 0.5)**2, 2)
+        fx = sum(floor(x + 0.5)**2, 2)
 
     end function step_mult
 
@@ -538,7 +538,7 @@ contains
         fx = 0
         do i=1,4
             where (v(:,i) < 0.5)
-                fx = fx + d(i)*(0.15*(z(:,i) - 0.05*sign(one, z(:,i))**2))
+                fx = fx + d(i)*0.15*(z(:,i) - 0.05*sign(one, z(:,i))**2)
             elsewhere
                 fx = fx + d(i)*(x(:,i)**2)
             end where
@@ -564,7 +564,7 @@ contains
         real(kind=wp), dimension(size(x, 1)) :: fx
 
         fx = (sum(sin(x)**2, 2) - exp(-sum(x**2, 2))) * &
-             exp(sum(sin(sqrt(abs(x)))**2, 2))
+             exp(-sum(sin(sqrt(abs(x)))**2, 2))
 
     end function yang_6_mult
 
